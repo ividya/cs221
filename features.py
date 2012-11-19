@@ -34,7 +34,6 @@ class Features:
 
 
 puzzles = parser.Parser().parse("sudoku_tests.txt")
-print puzzles
 feature = Features()
 for puzzle in puzzles: 
   feature.arc_consistency(puzzle)
