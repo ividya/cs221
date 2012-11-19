@@ -1,4 +1,4 @@
-class sudoku:
+class Sudoku:
   def __init__(self, puzzle):
     self.puzzle = puzzle
     self.initialPuzzle = puzzle
@@ -19,13 +19,13 @@ class sudoku:
     square = [0] * 9
     k = 0
     for r in range(row * 3, row * 3 + 3):
-      for c in range(col * 3, col * 3 + 3)
+      for c in range(col * 3, col * 3 + 3):
         square[k] = puzzle[r][c]
-        k++
+        k += 1
     return square
 
   def getLegalMoves(self, i, j):
-    if not puzzle[i][j] == 0:
+    if not self.puzzle[i][j] == 0:
       return []
     digits = range(1,10)
     for x in self.getRow(i):

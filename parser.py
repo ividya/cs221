@@ -1,5 +1,6 @@
 import sys
 import re
+import sudoku
 
 class Parser: 
   
@@ -12,6 +13,7 @@ class Parser:
     current_puzzle = list()
     row = 0
     for line in the_file: 
+      print line
       if row == 0: 
         if "hard" in line: 
           current_puzzle.append("hard")
@@ -46,9 +48,9 @@ class Parser:
         continue
       row += 1
     print "Puzzles parsed:", len(all_puzzles)
-    print all_puzzles[0]
+    sudokus = list()
+    for puzzle in all_puzzles: 
+      sudokus.append(sudoku.Sudoku(puzzle))
+    return sudokus
+
   
-
-
-parser = Parser()
-parser.parse(sys.argv[1])
