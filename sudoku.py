@@ -1,5 +1,6 @@
 class Sudoku:
   def __init__(self, puzzle):
+    self.classification = puzzle.pop(0)
     self.puzzle = puzzle
     self.initialPuzzle = puzzle
 
