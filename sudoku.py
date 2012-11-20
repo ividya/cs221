@@ -3,14 +3,21 @@ class Sudoku:
     self.classification = puzzle.pop(0)
     self.puzzle = puzzle
     self.initialPuzzle = puzzle
+    if len(self.puzzle) < 9: 
+      print "eRROR"
+      print len(self.puzzle)
+      print self.puzzle
 
+  def getDifficulty(self):
+    return self.classification
+  
   def getRow(self, i):
     return self.puzzle[i]
 
-  def getColumn(self, j):
+  def getCol(self, j):
     column = [0] * 9
     for row in self.puzzle:
-      column[j] = self[row][j]
+      column[j] = row[j]  
     return column
 
   def getSquare(self, i, j):
@@ -21,12 +28,12 @@ class Sudoku:
     k = 0
     for r in range(row * 3, row * 3 + 3):
       for c in range(col * 3, col * 3 + 3):
-        square[k] = puzzle[r][c]
+        square[k] = self.puzzle[r][c]
         k += 1
     return square
 
   def getLegalMoves(self, i, j):
-    if not self.puzzle[i][j] == 0:
+    if self.puzzle[i][j] > 0:
       return []
     digits = range(1,10)
     for x in self.getRow(i):
@@ -41,8 +48,8 @@ class Sudoku:
     return digits
 
   def setSquare(self, i, j, value):
-    if puzzle[i][j] == 0:
-      puzzle[i][j] = value
+    if self.puzzle[i][j] == 0:
+      self.puzzle[i][j] = value
 
   
  

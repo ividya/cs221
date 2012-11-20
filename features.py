@@ -27,13 +27,16 @@ class Features:
           domains[i][j] = sudoku.getLegalMoves(i, j)
           size_of_domain += len(domains[i][j])
           if len(domains[i][j]) == 1: 
-            sudoku.setSquare(i, j, domains[i][j][1])
-      total_domains.add(size_of_domain)
+            sudoku.setSquare(i, j, domains[i][j][0])
+      total_domains.append(size_of_domain)
       size_of_domain = 0
-    print total_domains
+    return total_domains
 
 
 puzzles = parser.Parser().parse("sudoku_tests.txt")
 feature = Features()
+arc_consistencies = dict()
 for puzzle in puzzles: 
-  feature.arc_consistency(puzzle)
+  arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
+for puzzle,values in arc_consistencies.items(): 
+  print puzzle.getDifficulty(), values[9] - values[0]

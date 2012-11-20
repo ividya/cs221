@@ -13,7 +13,6 @@ class Parser:
     current_puzzle = list()
     row = 0
     for line in the_file: 
-      print line
       if row == 0: 
         if "hard" in line: 
           current_puzzle.append("hard")
@@ -21,6 +20,8 @@ class Parser:
           current_puzzle.append("easy")
         if "medium" in line: 
           current_puzzle.append("medium")
+        if "fiendish" in line: 
+          current_puzzle.append("fiendish")
         row += 1
         continue
       if row == 4 or row == 8: 
@@ -32,9 +33,9 @@ class Parser:
       new_row = list()
       for box in row_list: 
         if box == ".": 
-          new_row.append("0")
+          new_row.append(0)
         else: 
-          new_row.append(box)
+          new_row.append(int(box))
       if len(row_list) != 9: 
         print "ERROR ERROR ERROR"
         print line
@@ -44,6 +45,9 @@ class Parser:
       if row == 11: 
         row = 0
         all_puzzles.append(current_puzzle)
+        if len(current_puzzle) != 10: 
+          print current_puzzle
+          print "ASFDLJASLFKJDSAs"
         current_puzzle = list()
         continue
       row += 1
