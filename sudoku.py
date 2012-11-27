@@ -16,8 +16,8 @@ class Sudoku:
 
   def getCol(self, j):
     column = [0] * 9
-    for row in self.puzzle:
-      column[j] = row[j]  
+    for i in range(9):
+      column[i] = self.puzzle[i][j]
     return column
 
   def getSquare(self, i, j):
