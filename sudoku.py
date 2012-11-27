@@ -2,7 +2,9 @@ class Sudoku:
   def __init__(self, puzzle):
     self.classification = puzzle.pop(0)
     self.puzzle = puzzle
-    self.initialPuzzle = puzzle
+    self.initialPuzzle = list()
+    for row in self.puzzle: 
+      self.initialPuzzle.append(list(row))
     if len(self.puzzle) < 9: 
       print "eRROR"
       print len(self.puzzle)
@@ -31,6 +33,10 @@ class Sudoku:
         square[k] = self.puzzle[r][c]
         k += 1
     return square
+
+  def reset(self):
+    self.puzzle = self.initialPuzzle
+  
 
   def getLegalMoves(self, i, j):
     if self.puzzle[i][j] > 0:
