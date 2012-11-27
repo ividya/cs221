@@ -76,12 +76,36 @@ class Features:
         return True
       prev_domain = domains
 
+  def feature_6(self, sudoku):
+    squares = []
+    for i in range(3):
+      for j in range(3):
+        squares.append(sudoku.getSquare(i*3,j*3))
+    maxNumComplete = 0
+    for square in squares:
+      numComplete = 0
+      rows = [square[0:3], square[3:6], square[6:9]]
+      cols = []
+      for i in range(3):
+        cols.append([rows[j][i] for j in range(3)])
+      rows.extend(cols)
+      
+      for row in rows:
+        if row.count(0) == 0:
+          numComplete += 1
+      if numComplete > maxNumComplete:
+        maxNumComplete = numComplete
+      if maxNumComplete == 3:
+        break
+    return maxNumComplete
+
 
 puzzles = parser.Parser().parse("sudoku_tests.txt")
 feature = Features()
 arc_consistencies = dict()
 solvables = dict()
 for puzzle in puzzles: 
+  print feature.feature_6(puzzle)
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
 
 for puzzle,values in arc_consistencies.items(): 
