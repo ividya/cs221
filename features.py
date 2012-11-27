@@ -18,7 +18,6 @@ class Features:
     domains = dict()
     for i in range(0, 9): 
       domains[i] = dict()
-    prev_domain = None
     size_of_domain = 0 
     total_domains = list()
     for round in range(10): 
@@ -58,13 +57,32 @@ class Features:
         max_number = max(filled, max_number)
     return max_number
 
+  def isSolvableByAC(self, sudoku):
+    domains = dict()
+    for i in range(0, 9): 
+      domains[i] = dict()
+    prev_domain = None
+    size_of_domain = 0 
+    while True:
+      for i in range(9): 
+        for j in range(9): 
+          domains[i][j] = sudoku.getLegalMoves(i, j)
+          size_of_domain += len(domains[i][j])
+          if len(domains[i][j]) == 1: 
+            sudoku.setSquare(i, j, domains[i][j][0])
+      if (prev_domain == domains):
+        return False
+      if (sudoku.isComplete()):
+        return True
+      prev_domain = domains
+
 
 puzzles = parser.Parser().parse("sudoku_tests.txt")
 feature = Features()
 arc_consistencies = dict()
+solvables = dict()
 for puzzle in puzzles: 
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
+
 for puzzle,values in arc_consistencies.items(): 
-  print puzzle.getDifficulty(), values[9] - values[0]
-puzzles[0].reset()
-print feature.feature_4(puzzles[0])
+  print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)

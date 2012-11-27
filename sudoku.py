@@ -57,5 +57,14 @@ class Sudoku:
     if self.puzzle[i][j] == 0:
       self.puzzle[i][j] = value
 
-  
+  def isComplete(self):
+    for i in range(9):
+      for j in range(9):
+        if (self.puzzle[i][j] == 0):
+          return False
+    return True
+
+  def printPuzzle(self):
+    for row in self.puzzle:
+      print row
  
