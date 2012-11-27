@@ -57,6 +57,21 @@ class Features:
         max_number = max(filled, max_number)
     return max_number
 
+  def feature_5(self, sudoku):
+    counts = dict()
+    for i in range(10): 
+      counts[i] = 0
+    for row in sudoku.puzzle: 
+      for square in row: 
+        counts[square] += 1
+    maxval = 0
+    for key in counts.keys():
+      if key == 0: 
+        continue
+      keyval = counts[key]
+      maxval = max(keyval, maxval)
+    return maxval 
+  
   def isSolvableByAC(self, sudoku):
     domains = dict()
     for i in range(0, 9): 
@@ -83,6 +98,7 @@ arc_consistencies = dict()
 solvables = dict()
 for puzzle in puzzles: 
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
-
 for puzzle,values in arc_consistencies.items(): 
   print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
+puzzles[0].reset()
+print feature.feature_5(puzzles[0])
