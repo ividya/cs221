@@ -57,4 +57,8 @@ class Sudoku:
         if (self.puzzle[i][j] == 0):
           return False
     return True
+
+  def printPuzzle(self):
+    for row in self.puzzle:
+      print row
  

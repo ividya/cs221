@@ -46,7 +46,7 @@ class Features:
             sudoku.setSquare(i, j, domains[i][j][0])
       if (prev_domain == domains):
         return False
-      if (sudoku.isComplete):
+      if (sudoku.isComplete()):
         return True
       prev_domain = domains
 
@@ -54,8 +54,9 @@ class Features:
 puzzles = parser.Parser().parse("sudoku_tests.txt")
 feature = Features()
 arc_consistencies = dict()
+solvables = dict()
 for puzzle in puzzles: 
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
-  print feature.isSolvableByAC(puzzle)
+
 for puzzle,values in arc_consistencies.items(): 
-  print puzzle.getDifficulty(), values[9] - values[0]
+  print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
