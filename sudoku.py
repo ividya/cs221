@@ -12,7 +12,15 @@ class Sudoku:
 
   def getDifficulty(self):
     return self.classification
-  
+
+  def getEmptySquares(self):
+    squares = list()
+    for i in range(9): 
+      for j in range(9): 
+        if self.puzzle[i][j] == 0: 
+          squares.append((i, j))
+    return squares
+
   def getRow(self, i):
     return self.puzzle[i]
 
