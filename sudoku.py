@@ -13,6 +13,14 @@ class Sudoku:
   def getDifficulty(self):
     return self.classification
 
+  def hasEmptyDomain(self):
+    for i in range(9):
+      for j in range(9): 
+        if len(getLegalMoves(i, j)) == 0: 
+          return True
+    return False
+  
+
   def getEmptySquares(self):
     squares = list()
     for i in range(9): 
