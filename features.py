@@ -134,6 +134,23 @@ class Features:
       if maxNumComplete == 3:
         break
     return maxNumComplete
+  
+  #this must be run after arc_consistency is run 10 times -> see feature.arc_consistency
+  def feature_7(self, sudoku):
+    counts = dict()
+    for i in range(10): 
+      counts[i] = 0
+    for i in range(9): 
+      for j in range(9): 
+        domain = sudoku.getLegalMoves(i, j)
+        for d in domain: 
+          counts[d] += 1
+    maxvalue = 0
+    for key in counts.keys(): 
+      if key == 0: 
+        continue
+      maxvalue = max(counts[key], maxvalue)
+    return maxvalue
 
 
 puzzles = parser.Parser().parse("sudoku_tests.txt")
@@ -141,9 +158,17 @@ feature = Features()
 arc_consistencies = dict()
 solvables = dict()
 for puzzle in puzzles: 
+<<<<<<< HEAD
   print feature.feature_6(puzzle)
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle, 10)
 for puzzle,values in arc_consistencies.items():
   print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
 puzzles[0].reset()
 print feature.feature_5(puzzles[0])
+=======
+  arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
+for puzzle in puzzles: 
+  print puzzle.getDifficulty(), feature.feature_7(puzzle)
+for puzzle,values in arc_consistencies.items(): 
+  print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
+>>>>>>> cd66918c536ba27b507abeab838f603e101013ac
