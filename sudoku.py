@@ -14,10 +14,10 @@ class Sudoku:
     return self.classification
 
   def hasEmptyDomain(self):
-    for i in range(9):
-      for j in range(9): 
-        if len(getLegalMoves(i, j)) == 0: 
-          return True
+    empties = self.getEmptySquares()
+    for i,j in empties:
+      if len(self.getLegalMoves(i, j)) == 0:
+        return True
     return False
   
 

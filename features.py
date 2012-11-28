@@ -43,11 +43,14 @@ class Features:
       moveStack.append(((i,j), sudoku.copy()))
       for value in domain:
         sudoku.setSquare(i,j,value)
-        backTrackingCounter += 1
-        self.arc_consistency(sudoku, numRounds)
-        if doBacktracking(sudoku, moveStack):
+        self.backTrackingCounter += 1
+        if self.isSolvableByAC(sudoku):
           return True
+        if not sudoku.hasEmptyDomain():
+          if self.doBacktracking(sudoku, moveStack):
+            return True
         sudoku = moveStack[-1][1].copy()
+      moveStack.pop()
       return False
     
     
@@ -95,7 +98,7 @@ class Features:
   
   def isSolvableByAC(self, sudoku):
     domains = dict()
-    for i in range(0, 9): 
+    for i in range(0, 9):
       domains[i] = dict()
     prev_domain = None
     size_of_domain = 0 
@@ -156,11 +159,10 @@ class Features:
 puzzles = parser.Parser().parse("sudoku_tests.txt")
 feature = Features()
 arc_consistencies = dict()
-solvables = dict()
+
 for puzzle in puzzles: 
-  print feature.feature_6(puzzle)
-  arc_consistencies[puzzle] = feature.arc_consistency(puzzle, 10)
-for puzzle,values in arc_consistencies.items():
-  print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
+  feature.backTrackingCounter = 0
+  bt = feature.doBacktracking(puzzle, [])
+  print bt,feature.backTrackingCounter
 puzzles[0].reset()
-print feature.feature_5(puzzles[0])
+
