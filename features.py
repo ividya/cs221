@@ -8,19 +8,21 @@ Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 """
 
 import sys
-import parser 
+import parser
 import sudoku
+import random
 
-class Features: 
+class Features:
+  backTrackingCounter = 0 
   
   #This will run arc-consistency 
-  def arc_consistency(self, sudoku):
+  def arc_consistency(self, sudoku, numRounds):
     domains = dict()
     for i in range(0, 9): 
       domains[i] = dict()
     size_of_domain = 0 
     total_domains = list()
-    for round in range(10): 
+    for round in range(numRounds): 
       for i in range(9): 
         for j in range(9): 
           domains[i][j] = sudoku.getLegalMoves(i, j)
@@ -30,6 +32,25 @@ class Features:
       total_domains.append(size_of_domain)
       size_of_domain = 0
     return total_domains
+
+  def doBacktracking(self, sudoku, moveStack):
+    empties = sudoku.getEmptySquares()
+    if (len(empties) == 0):
+      return True
+    else:
+      (i,j) = empties[0]
+      domain = sudoku.getLegalMoves(i,j)
+      moveStack.append(((i,j), sudoku.copy()))
+      for value in domain:
+        sudoku.setSquare(i,j,value)
+        backTrackingCounter += 1
+        self.arc_consistency(sudoku, numRounds)
+        if doBacktracking(sudoku, moveStack):
+          return True
+        sudoku = moveStack[-1][1].copy()
+      return False
+    
+    
   
   def feature_4(self, sudoku):
     max_number = -sys.maxint-1
@@ -121,8 +142,8 @@ arc_consistencies = dict()
 solvables = dict()
 for puzzle in puzzles: 
   print feature.feature_6(puzzle)
-  arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
-for puzzle,values in arc_consistencies.items(): 
+  arc_consistencies[puzzle] = feature.arc_consistency(puzzle, 10)
+for puzzle,values in arc_consistencies.items():
   print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
 puzzles[0].reset()
 print feature.feature_5(puzzles[0])
