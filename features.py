@@ -158,17 +158,9 @@ feature = Features()
 arc_consistencies = dict()
 solvables = dict()
 for puzzle in puzzles: 
-<<<<<<< HEAD
   print feature.feature_6(puzzle)
   arc_consistencies[puzzle] = feature.arc_consistency(puzzle, 10)
 for puzzle,values in arc_consistencies.items():
   print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
 puzzles[0].reset()
 print feature.feature_5(puzzles[0])
-=======
-  arc_consistencies[puzzle] = feature.arc_consistency(puzzle)
-for puzzle in puzzles: 
-  print puzzle.getDifficulty(), feature.feature_7(puzzle)
-for puzzle,values in arc_consistencies.items(): 
-  print puzzle.getDifficulty(), values[9] - values[0], feature.isSolvableByAC(puzzle)
->>>>>>> cd66918c536ba27b507abeab838f603e101013ac
