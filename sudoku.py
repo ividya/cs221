@@ -30,6 +30,14 @@ class Sudoku:
       column[i] = self.puzzle[i][j]
     return column
 
+  def copy(self): 
+    new_puzzle = list()
+    new_puzzle.append(self.classification)
+    for row in self.puzzle: 
+      new_puzzle.append(list(row))
+    new_s = Sudoku(new_puzzle)
+    return new_s
+  
   def getSquare(self, i, j):
     row = i / 3
     col = j / 3
