@@ -14,6 +14,7 @@ import random
 
 class Features:
   backTrackingCounter = 0 
+  backTrackingResult = None
   
   #This will run arc-consistency 
   def arc_consistency(self, sudoku, numRounds):
@@ -36,6 +37,7 @@ class Features:
   def doBacktracking(self, sudoku, moveStack):
     empties = sudoku.getEmptySquares()
     if (len(empties) == 0):
+      self.backTrackingResult = sudoku
       return True
     else:
       (i,j) = empties[0]
@@ -45,6 +47,7 @@ class Features:
         sudoku.setSquare(i,j,value)
         self.backTrackingCounter += 1
         if self.isSolvableByAC(sudoku):
+          self.backTrackingResult = sudoku
           return True
         if not sudoku.hasEmptyDomain():
           if self.doBacktracking(sudoku, moveStack):
@@ -53,7 +56,29 @@ class Features:
       moveStack.pop()
       return False
     
-    
+
+  def doRandomBacktracking(self, sudoku, moveStack):
+    empties = sudoku.getEmptySquares()
+    if (len(empties) == 0):
+      self.backTrackingResult = sudoku
+      return True
+    else:
+      (i,j) = empties[0]
+      domain = sudoku.getLegalMoves(i,j)
+      moveStack.append(((i,j), sudoku.copy()))
+      random.shuffle(domain)
+      for value in domain:
+        sudoku.setSquare(i,j,value)
+        self.backTrackingCounter += 1
+        if self.isSolvableByAC(sudoku):
+          self.backTrackingResult = sudoku
+          return True
+        if not sudoku.hasEmptyDomain():
+          if self.doRandomBacktracking(sudoku, moveStack):
+            return True
+        sudoku = moveStack[-1][1].copy()
+      moveStack.pop()
+      return False       
   
   def feature_4(self, sudoku):
     max_number = -sys.maxint-1
@@ -156,13 +181,13 @@ class Features:
     return maxvalue
 
 
-puzzles = parser.Parser().parse("sudoku_tests.txt")
-feature = Features()
-arc_consistencies = dict()
+#puzzles = parser.Parser().parse("sudoku_tests.txt")
+#feature = Features()
+#arc_consistencies = dict()
 
-for puzzle in puzzles: 
-  feature.backTrackingCounter = 0
-  bt = feature.doBacktracking(puzzle, [])
-  print bt,feature.backTrackingCounter
-puzzles[0].reset()
+#for puzzle in puzzles: 
+  #feature.backTrackingCounter = 0
+  #bt = feature.doBacktracking(puzzle, [])
+  #print bt,feature.backTrackingCounter
+#puzzles[0].reset()
 

@@ -1,5 +1,10 @@
 class Sudoku:
   def __init__(self, puzzle):
+    if len(puzzle) == 0: 
+      puzzle = list()
+      puzzle.append("unknown")
+      for i in range(9): 
+        puzzle.append([0,0,0,0,0,0,0,0,0])
     self.classification = puzzle.pop(0)
     self.puzzle = puzzle
     self.initialPuzzle = list()
@@ -26,6 +31,14 @@ class Sudoku:
     for i in range(9): 
       for j in range(9): 
         if self.puzzle[i][j] == 0: 
+          squares.append((i, j))
+    return squares
+
+  def getNonEmptySquares(self):
+    squares = list()
+    for i in range(9): 
+      for j in range(9): 
+        if self.puzzle[i][j] != 0: 
           squares.append((i, j))
     return squares
 
@@ -81,6 +94,10 @@ class Sudoku:
     if self.puzzle[i][j] == 0:
       self.puzzle[i][j] = value
 
+  def clearSquare(self, i, j):
+    if self.puzzle[i][j] != 0:
+      self.puzzle[i][j] = 0
+
   def isComplete(self):
     for i in range(9):
       for j in range(9):
@@ -89,6 +106,23 @@ class Sudoku:
     return True
 
   def printPuzzle(self):
+    result = ""
+    rowCounter = 0
+    colCounter = 0
     for row in self.puzzle:
-      print row
+      print "|---|---|---|---|---|---|---|---|---| "
+      for square in row:
+        if int(square) == 0:
+          square = " "
+        if colCounter == 0: 
+          result += "| " + str(square) + " | "
+        else: 
+          result += str(square) + " | "
+        colCounter += 1
+      colCounter = 0
+      print result
+      result = ""
+      rowCounter += 1
+    print "|---|---|---|---|---|---|---|---|---| "
+    
  
