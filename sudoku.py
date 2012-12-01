@@ -17,7 +17,29 @@ class Sudoku:
 
   def getDifficulty(self):
     return self.classification
-
+  
+  '''
+  Yet to be classified - 0
+  Very Easy - 1
+  Easy - 2
+  Medium - 3
+  Hard - 4
+  Fiendishly Hard - 5
+  '''
+  def getIntLevel(self):
+    if self.classification == "very easy": 
+      return 1
+    if self.classification == "easy": 
+      return 2
+    if self.classification == "medium": 
+      return 3
+    if self.classification == "hard": 
+      return 4
+    if self.classification == "fiendish": 
+      return 5
+    print "Some sort of error occurred!"
+    return 0
+  
   def hasEmptyDomain(self):
     empties = self.getEmptySquares()
     for i,j in empties:

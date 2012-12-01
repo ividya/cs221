@@ -48,6 +48,25 @@ def run_algorithm(data_point, determined_set, k):
   data_point['level'] = round(level)
   return data_point
 
+def run_all_test_points(test_features, train_features):
+  test_points = open(test_features)
+  train_features = open(train_featuers)
+  determined_set = list()
+  for line in train_features: 
+    inputs = line.split()
+    level = inputs.pop(0)
+    point = dict()
+    point['features'] = level
+    point['level'] = level
+    determined_set.append(point)
+  for line in test_points: 
+    inputs = line.split()
+    inputs.pop(0)
+    point = dict()
+    point['features'] = inputs
+    print run_algorithm(point, determined_set, 3)
+
+
 data = dict()
 data['features'] = [1, 1]
 test_set = list()
