@@ -80,6 +80,17 @@ class Features:
       moveStack.pop()
       return False       
   
+  def feature_1(self, sudoku):
+    return len(sudoku.getNonEmptySquares())
+
+  def feature_2(self, sudoku):
+    return self.arc_consistency(sudoku, 10)
+
+  def feature_3(self, sudoku):
+    if isSolvableByAC(sudoku):
+      return 1
+    return 0
+
   def feature_4(self, sudoku):
     max_number = -sys.maxint-1
     for i in range(9): 
@@ -165,6 +176,7 @@ class Features:
   
   #this must be run after arc_consistency is run 10 times -> see feature.arc_consistency
   def feature_7(self, sudoku):
+    self.arc_consistency(sudoku, 10)
     counts = dict()
     for i in range(10): 
       counts[i] = 0
@@ -179,6 +191,10 @@ class Features:
         continue
       maxvalue = max(counts[key], maxvalue)
     return maxvalue
+
+  def feature_8(self, sudoku):
+    self.doBacktracking(puzzle, [])
+    return self.backTrackingCounter
 
 
 #puzzles = parser.Parser().parse("sudoku_tests.txt")
