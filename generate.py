@@ -68,12 +68,16 @@ class Generate:
         self.feature.doRandomBacktracking(su, [])
         su = self.feature.backTrackingResult
       
+        su.printSolution()
+        
         keep = random.randrange(17, 35)
         remove = 81 - keep
         for i in range(remove): 
           nonempties = su.getNonEmptySquares()
           choice = random.choice(nonempties)
           su.clearSquare(choice[0], choice[1])
+        
+        su.printPuzzle()
         
         #change to if su_level == level 
         #su_level = classify(su)
@@ -97,4 +101,4 @@ class Generate:
   
 
 gen = Generate()
-(gen.run(sys.argv[1])).printPuzzle()
+gen.run(sys.argv[1])

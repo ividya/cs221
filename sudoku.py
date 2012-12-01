@@ -106,11 +106,14 @@ class Sudoku:
     return True
 
   def printPuzzle(self):
+    output = open("output.txt", "w+")
     result = ""
+    result2 = ""
     rowCounter = 0
     colCounter = 0
     for row in self.puzzle:
       print "|---|---|---|---|---|---|---|---|---| "
+      print >>output, "<tr>"
       for square in row:
         if int(square) == 0:
           square = " "
@@ -118,11 +121,25 @@ class Sudoku:
           result += "| " + str(square) + " | "
         else: 
           result += str(square) + " | "
+        result2 += "<td>" + str(square) + "</td>"
         colCounter += 1
       colCounter = 0
       print result
+      print >>output, result2
+      print >>output, "</tr>"
+      result2 = ""
       result = ""
       rowCounter += 1
     print "|---|---|---|---|---|---|---|---|---| "
+  
+  #Overwrites anything in output.txt! 
+  def printSolution(self):
+    self.printPuzzle()
+    output = open("output.txt")
+    solution = open("solution.txt", "w+")
+    for line in output: 
+      print >>solution, line
+  
+  
     
  
