@@ -179,10 +179,61 @@ class Features:
         continue
       maxvalue = max(counts[key], maxvalue)
     return maxvalue
+  
+  #This function assumes that the sudoku given is the initial unsolved puzzle
+  #This is the order of the features in the vector: 
+  #1) the number of given squares
+  #2) maximum number of squares given in a set (where set is defined as row, column or 3 by 3 square)
+  #3) maximum number of rows or columns filled in a square
+  #4) maximum number of squares where a digit is in the domain.
+  #5) the number of domain variables eliminated in the first 10 rules
+  #6) maximum number of squares that can be filled by a single digit after 10 rounds of arc consistency 
+  #7) solvable with arc consistency
+  def feature_vector(self, sudoku):
+    vector = list()
+    #there are 7 features in each list that is returned
+    #1) the number of given squares
+    given_squares = 81 - len(sudoku.getEmptySquares())
+    vector.append(given_squares)
+    #4) maximum number of squares given in a set (where set is defined as row, column or 3 by 3 square)
+    given_in_set = self.feature_4(sudoku)
+    vector.append(given_in_set)
+    #6) maximum number of rows or columns filled in a square
+    max_row_or_cols = self.feature_5(sudoku)
+    vector.append(max_row_or_cols)
+    #7) maximum number of squares where a digit is in the domain.
+    max_in_domain = self.feature_6(sudoku)
+    vector.append(max_in_domain)
+    #2) the number of domain variables eliminated in the first 10 rules
+    eliminated_domains = self.arc_consistency(sudoku, 10)
+    size_of_domain_difference = eliminated_domains[0] - eliminated_domains[len(eliminated_domains)-1]
+    vector.append(size_of_domain_difference)
+    #5) maximum number of squares that can be filled by a single digit after 10 rounds of arc consistency 
+    squares_filled = self.feature_7(sudoku)
+    sudoku.reset()
+    vector.append(squares_filled)
+    #3) solvable with arc consistency
+    solvable = self.isSolvableByAC(sudoku)
+    if solvable: 
+      solvable = 1
+    else: 
+      solvable = 0 
+    vector.append(solvable)
+    return vector
+  
+  def create_features_file(self, puzzles):
+    output = open("results.txt", "w+")
+    for puzzle in puzzles: 
+      vector = self.feature_vector(puzzle)
+      print >>output, " ".join(str(x) for x in vector)
+  
+
+    
 
 
-#puzzles = parser.Parser().parse("sudoku_tests.txt")
-#feature = Features()
+puzzles = parser.Parser().parse("sudoku_tests.txt")
+feature = Features()
+feature.create_features_file(puzzles)
 #arc_consistencies = dict()
 
 #for puzzle in puzzles: 
