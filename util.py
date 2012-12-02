@@ -16,16 +16,9 @@ def getClassificationErrorRate(examples, predict, displayName=None, verbose=0, f
   return 1.0 * numMistakes / len(examples)
 
 def readExamples(path):
-  # path is a CSV file, each line contains label (+1 or -1), followed by a list of tokens.
-  # Return list of examples; each example is a (x,y) pair.
-  import csv
-  examples = []
-  for row in csv.reader(open(path)):
-    x = tuple(row[1:])
-    y = int(row[0])
-    if not (y == -1 or y == +1):
-      raise "Invalid output label (only binary classification supported): %s" % y
-    examples.append((x, y))
+  #Parse the sudoku files
+  import parser
+  examples = parser.Parser().parse(path)
   print "Read %d examples from %s" % (len(examples), path)
   return examples
 
@@ -58,8 +51,8 @@ def runLearner(module, args):
     print "Ignoring extra arguments:", extra_args
 
   # Read data
-  trainExamples = readExamples(options.dataset + '.train.csv')
-  validationExamples = readExamples(options.dataset + '.validation.csv')
+  trainExamples = readExamples('sudoku_train_5000.txt')
+  validationExamples = readExamples('sudoku_tests.txt')
 
   if options.setTunedOptions:
     print "Using tuned options"
