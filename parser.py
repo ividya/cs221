@@ -14,14 +14,17 @@ class Parser:
     row = 0
     for line in the_file: 
       if row == 0: 
-        if "hard" in line: 
-          current_puzzle.append("hard")
-        if "easy" in line: 
-          current_puzzle.append("easy")
-        if "medium" in line: 
-          current_puzzle.append("medium")
-        if "fiendish" in line: 
-          current_puzzle.append("fiendish")
+        if "very easy" in line:
+          current_puzzle.append("very easy")
+        else: 
+          if "hard" in line: 
+            current_puzzle.append("hard")
+          if "easy" in line: 
+            current_puzzle.append("easy")
+          if "medium" in line: 
+            current_puzzle.append("medium")
+          if "fiendish" in line: 
+            current_puzzle.append("fiendish")
         row += 1
         continue
       if row == 4 or row == 8: 

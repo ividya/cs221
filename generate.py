@@ -36,6 +36,7 @@ import sys
 import sudoku
 import random 
 import features
+import knn
 
 class Generate:
   
@@ -55,7 +56,17 @@ class Generate:
     self.stored['fiendish'] = list()
     self.feature = features.Features()
 
+  def classify(self, sudoku):
+    feature_vector = self.feature.feature_vector(sudoku)
+    level = feature_vector.pop(0)
+    point = dict()
+    point['features'] = feature_vector
+    point = knn.classify(point, "train_results.txt", 5)
+    level = int(point['level'])
+    return level
+  
   def createSudoku(self, level):
+    extraGenerated = 0
     if len(self.stored[level]) == 0: 
       foundPuzzle = False
       while(not foundPuzzle): 
@@ -70,7 +81,10 @@ class Generate:
       
         su.printSolution()
         
-        keep = random.randrange(17, 35)
+        if "easy" in level or "medium" in level: 
+          keep = random.randrange(30, 35)
+        else: 
+          keep = random.randrange(17, 35)
         remove = 81 - keep
         for i in range(remove): 
           nonempties = su.getNonEmptySquares()
@@ -79,12 +93,13 @@ class Generate:
         
         su.printPuzzle()
         
-        #change to if su_level == level 
-        #su_level = classify(su)
-        if True: 
+        su_level = self.classify(su)
+        su.setClassification(su_level)
+        if level == su.getDifficulty() or "easy" in level: 
           foundPuzzle = True
         else: 
-          self.stored[su_level].append(su)
+          extraGenerated += 1
+          self.stored[su.getDifficulty()].append(su)
     else: 
       su = self.stored[level].pop()
     return su

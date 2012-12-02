@@ -2,11 +2,7 @@
 <html>
 	<head>
 		<title>Sudoku Generator</title>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-		<link href="style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-			<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-			<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<link rel="stylesheet" href="style.css" />
 		
 		<style type="text/css" media="screen">
 		table{
@@ -26,8 +22,9 @@
 	</head>
 
 	<body class="move_right">
-		<a href="interface.html" data-role="button" data-icon="home" data-theme="b" data-inline="true">Home</a>
-		
+		<a href="interface.html" class="button3" data-role="button" data-icon="home" data-theme="b" data-inline="true">Home</a>
+		<br>
+		<br>
 		<?php
 			$level = "very easy";
 			if($_GET['radio-choice'] == "choice-2") {
@@ -42,8 +39,8 @@
 			if($_GET['radio-choice'] == "choice-5") {
 				$level = "fiendish";
 			}
-			echo "<h2>". "Enjoy!"."</h2>"; 
-			echo "<h4>". "Level: " . $level . "</h4>";
+			echo "<h1>". "Enjoy!"."</h1>"; 
+			echo "<h2>". "Level: " . $level . "</h2>";
 			$command = '/usr/local/bin/python generate.py' . ' ' . $level;
 			$temp = exec($command, $output);
 			$filename = "output.txt";

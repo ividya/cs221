@@ -134,6 +134,23 @@ class Features:
       maxval = max(keyval, maxval)
     return maxval 
   
+  def solvableByAC(self, sudoku):
+    prev_domain = 0 
+    rounds = 0
+    while True: 
+      domains = self.arc_consistency(sudoku, 1)
+      rounds += 1
+      diff = domains[0] - prev_domain
+      prev_domain = domains[0]
+      if diff != 0: 
+        continue
+      else: 
+        if sudoku.isComplete():
+          self.arcConsistencyCounter = rounds
+          return True
+        else: 
+          return False
+  
   def isSolvableByAC(self, sudoku):
     domains = dict()
     for i in range(0, 9):
@@ -232,7 +249,7 @@ class Features:
     vector.append(squares_filled)
     #3) solvable with arc consistency
     self.arcConsistencyCounter = 0
-    solvable = self.isSolvableByAC(sudoku)
+    solvable = self.solvableByAC(sudoku)
     if solvable: 
       solvable = self.arcConsistencyCounter
     else: 
@@ -252,10 +269,10 @@ class Features:
       print >>output, " ".join(str(x) for x in vector)
 
 
-#puzzles = parser.Parser().parse("sudoku_train_5000.txt")
+#puzzles = parser.Parser().parse("test_all_levels.txt")
 #feature = Features()
 #print "parsed!"
-#feature.create_features_file("train_results.txt", puzzles)
+#feature.create_features_file("tests_results.txt", puzzles)
 #arc_consistencies = dict()
 
 #for puzzle in puzzles: 

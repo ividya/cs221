@@ -47,7 +47,18 @@ class Sudoku:
         return True
     return False
   
-
+  def setClassification(self, intLevel):
+    if intLevel == 1:
+      self.classification = "very easy"
+    if intLevel == 2: 
+      self.classification = "easy"
+    if intLevel == 3: 
+      self.classification = "medium"
+    if intLevel == 4: 
+      self.classification = "hard"
+    if intLevel == 5: 
+      self.classification = "fiendish"
+  
   def getEmptySquares(self):
     squares = list()
     for i in range(9): 

@@ -71,6 +71,19 @@ def run_algorithm(data_point, determined_set, k):
   data_point['level'] =  round(level)
   return data_point
 
+def classify(data_point, train_features_name, k):
+  train_features = open(train_features_name)
+  determined_set = list()
+  for line in train_features: 
+    inputs = [int(x) for x in line.split()]
+    level = inputs.pop(0)
+    point = dict()
+    point['features'] = inputs
+    point['level'] = level
+    determined_set.append(point)
+  level = run_algorithm(data_point, determined_set, k)
+  return level
+      
 def run_all_test_points(test_features, train_features, k):
   test_points = open(test_features)
   train_features = open(train_features)
