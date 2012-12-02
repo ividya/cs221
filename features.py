@@ -15,6 +15,8 @@ import random
 class Features:
   backTrackingCounter = 0 
   backTrackingResult = None
+
+  arcConsistencyCounter = 0
   
   #This will run arc-consistency 
   def arc_consistency(self, sudoku, numRounds):
@@ -139,6 +141,7 @@ class Features:
     prev_domain = None
     size_of_domain = 0 
     while True:
+      self.arcConsistencyCounter += 1
       for i in range(9): 
         for j in range(9): 
           domains[i][j] = sudoku.getLegalMoves(i, j)
@@ -201,6 +204,7 @@ class Features:
   #5) the number of domain variables eliminated in the first 10 rules
   #6) maximum number of squares that can be filled by a single digit after 10 rounds of arc consistency 
   #7) solvable with arc consistency
+  #8) number of simple backtracking iterations needed
   def feature_vector(self, sudoku):
     vector = list()
     #there are 7 features in each list that is returned
@@ -225,12 +229,19 @@ class Features:
     sudoku.reset()
     vector.append(squares_filled)
     #3) solvable with arc consistency
+    self.arcConsistencyCounter = 0
     solvable = self.isSolvableByAC(sudoku)
     if solvable: 
-      solvable = 1
+      solvable = self.arcConsistencyCounter
     else: 
       solvable = 0 
     vector.append(solvable)
+    #8) number of simple backtracking iterations needed
+    sudoku.reset()
+    self.backTrackingCounter = 0
+    self.doBacktracking(sudoku, [])
+    vector.append(self.backTrackingCounter)
+
     return vector
   
   def create_features_file(self, puzzles):
@@ -238,16 +249,9 @@ class Features:
     for puzzle in puzzles: 
       vector = self.feature_vector(puzzle)
       print >>output, " ".join(str(x) for x in vector)
-  
-
-    
-
-  def feature_8(self, sudoku):
-    self.doBacktracking(puzzle, [])
-    return self.backTrackingCounter
 
 
-puzzles = parser.Parser().parse("sudoku_tests.txt")
+puzzles = parser.Parser().parse("sudoku_train_5000.txt")
 feature = Features()
 feature.create_features_file(puzzles)
 #arc_consistencies = dict()
