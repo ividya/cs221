@@ -1,0 +1,3 @@
+classified wrong:  41
+classified correctly:  59
+difference on average:  1.0243902439

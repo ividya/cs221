@@ -245,16 +245,17 @@ class Features:
     self.backTrackingCounter = 0  
     return vector
   
-  def create_features_file(self, puzzles):
-    output = open("results.txt", "w+")
+  def create_features_file(self, name_of_feature_file, puzzles):
+    output = open(name_of_feature_file, "w+")
     for puzzle in puzzles: 
       vector = self.feature_vector(puzzle)
       print >>output, " ".join(str(x) for x in vector)
 
 
-puzzles = parser.Parser().parse("sudoku_train_5000.txt")
-feature = Features()
-feature.create_features_file(puzzles)
+#puzzles = parser.Parser().parse("sudoku_train_5000.txt")
+#feature = Features()
+#print "parsed!"
+#feature.create_features_file("train_results.txt", puzzles)
 #arc_consistencies = dict()
 
 #for puzzle in puzzles: 
