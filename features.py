@@ -204,9 +204,11 @@ class Features:
   #5) the number of domain variables eliminated in the first 10 rules
   #6) maximum number of squares that can be filled by a single digit after 10 rounds of arc consistency 
   #7) solvable with arc consistency
-  #8) number of simple backtracking iterations needed
+  #8) how many times we have to backtrack, min: 1
   def feature_vector(self, sudoku):
     vector = list()
+    #Add the level of the puzzle
+    vector.append(sudoku.getIntLevel())
     #there are 7 features in each list that is returned
     #1) the number of given squares
     given_squares = 81 - len(sudoku.getEmptySquares())
@@ -236,12 +238,11 @@ class Features:
     else: 
       solvable = 0 
     vector.append(solvable)
-    #8) number of simple backtracking iterations needed
     sudoku.reset()
-    self.backTrackingCounter = 0
+    #8) how many times we have to backtrack to solve
     self.doBacktracking(sudoku, [])
     vector.append(self.backTrackingCounter)
-
+    self.backTrackingCounter = 0  
     return vector
   
   def create_features_file(self, puzzles):
