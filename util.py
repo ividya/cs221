@@ -18,7 +18,14 @@ def getClassificationErrorRate(examples, predict, displayName=None, verbose=0, f
 def readExamples(path):
   #Parse the sudoku files
   import parser
-  examples = parser.Parser().parse(path)
+  import features
+  puzzles = parser.Parser().parse(path)
+  examples = []
+  for puzzle in puzzles:
+    x = features.Features().feature_vector(puzzle)
+    y = x.pop(0)
+    examples.append((x, y))
+  
   print "Read %d examples from %s" % (len(examples), path)
   return examples
 
@@ -51,8 +58,8 @@ def runLearner(module, args):
     print "Ignoring extra arguments:", extra_args
 
   # Read data
-  trainExamples = readExamples('sudoku_train_5000.txt')
-  validationExamples = readExamples('sudoku_tests.txt')
+  trainExamples = readExamples('train_all_levels.txt')
+  validationExamples = readExamples('test_all_levels.txt')
 
   if options.setTunedOptions:
     print "Using tuned options"

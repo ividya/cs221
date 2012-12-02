@@ -8,8 +8,8 @@ import sudoku
 
 def getNumClassInSet(dataset):
   num = util.Counter()
-  for x in dataset:
-    num[x.classification] = num[x.classification] + 1
+  for x,y in dataset:
+    num[y] = num[y] + 1
   return num
 
 ############################################################
@@ -19,9 +19,8 @@ def getNumClassInSet(dataset):
 def basicFeatureExtractor(x):
   featureVector = util.Counter()
 
-  featureList = features.Features().feature_vector(x)
   i = 1
-  for feature in featureList:
+  for feature in x:
     featureVector[i] = feature
     i += 1
 
@@ -168,6 +167,10 @@ class StochasticGradientLearner():
     # You should go over the training data numRounds times.
     # Each round, go through all the examples in some random order and update
     # the weights with respect to the gradient.
+
+    oldweights = [util.Counter() for i in range(5)]
+    oldObjectives = [float('inf') for i in range(5)]
+
     for round in range(0, options.numRounds):
       random.shuffle(trainExamples)
       numUpdates = 0  # Should be incremented with each example and determines the step size.
@@ -176,7 +179,7 @@ class StochasticGradientLearner():
       # in the code here (e.g., "for key,value in counter: counter[key] += ---"
       # rather than "counter * other_vector")
       reg = float(options.regularization) / len(trainExamples)
-      for x in trainExamples:
+      for x,y in trainExamples:
         numUpdates += 1
         "*** YOUR CODE HERE (around 7 lines of code expected) ***"
         featureVector = self.featureExtractor(x)
@@ -186,13 +189,11 @@ class StochasticGradientLearner():
           penalty = util.Counter()
           if not reg == 0:
               penalty = self.weights[c] * reg
-          if x.getIntLevel() == c+1: y = 1
-          else: y = -1
-          lGradient = lossGradient(featureVector, y, self.weights[c])
+          if y == c+1: y_c = 1
+          else: y_c = -1
+          lGradient = lossGradient(featureVector, y_c, self.weights[c])
           self.weights[c] -= (lGradient + penalty) * stepSize
 
-      for i in range(len(self.weights)):
-        print i+1, self.weights[i]
       # Compute the objective function.
       # Here, we have split the objective function into two components:
       # the training loss, and the regularization penalty.
@@ -205,11 +206,11 @@ class StochasticGradientLearner():
         for key in self.weights[c].keys():
           regularizationPenalty += ((self.weights[c][key])**2) / 2
         regularizationPenalty *= options.regularization
-        for x in trainExamples:
+        for x,y in trainExamples:
           featureVector = self.featureExtractor(x)
-          if x.getIntLevel() == c+1: y = 1
-          else: y = -1
-          trainLoss = trainLoss + loss(featureVector, y, self.weights[c])
+          if y == c+1: y_c = 1
+          else: y_c = -1
+          trainLoss = trainLoss + loss(featureVector, y_c, self.weights[c])
         self.objective[c] = trainLoss + regularizationPenalty
 
       # See how well we're doing on our actual goal (error rate).
@@ -218,18 +219,31 @@ class StochasticGradientLearner():
 
       print "Round %s/%s: train error = %.4f, validation error = %.4f" % (round+1, options.numRounds, trainError, validationError)
       for i in range(5):
-        print "objective = %.2f" % (self.objective[i])
+        print "%d: objective = %.2f, change of %.2f." % (i+1, self.objective[i], self.objective[i] - oldObjectives[i])
+        if self.objective[i] > oldObjectives[i]:
+          self.weights[i] = oldweights[i]
+        else:
+          oldObjectives[i] = self.objective[i]
+          oldweights[i] = self.weights[i]
+
+    # After all rounds and objective function changes, get the final error results
+    trainError = self.getNumErrors(trainExamples) / len(trainExamples)
+    validationError = self.getNumErrors(validationExamples) / len(validationExamples)
+
+    print "Final: train error = %.4f, validation error = %.4f" % (trainError, validationError)
 
     # Print out feature weights
     out = open('weights.txt', 'w+')
     for i in range(len(self.weights)):
-      print >>out, "label: " + i + " weights: " +" ".join(str(w) for w in self.weights[i])
+      print >>out, "label: " + str(i) + " weights: " +" ".join(str(w) for w in self.weights[i].values())
     out.close()
+
+
 
   def getNumErrors(self, examples):
     errors = 0
-    for x in examples:
-      if x.getIntLevel() != self.predict(x):
+    for x,y in examples:
+      if y != self.predict(x):
         errors += 1
     return 1.0 * errors
 
@@ -246,7 +260,6 @@ class StochasticGradientLearner():
   @return class with best possible chance of being correct
   """
   def predict(self, x):
-    "*** YOUR CODE HERE (around 3 lines of code expected) ***"
     phiX = self.featureExtractor(x)
     predictors = [w * phiX for w in self.weights]
     m = max(predictors)
@@ -257,12 +270,12 @@ class StochasticGradientLearner():
 # The autograder will call this function before calling learn().
 def setTunedOptions(options):
   "*** YOUR CODE HERE (around 6 lines of code expected) ***"
-  loss = hingeLoss
-  lossGradient = hingeLossGradient
+  loss = logisticLoss
+  lossGradient = logisticLossGradient
   featureExtractor = basicFeatureExtractor
   options.initStepSize = 1
   options.stepSizeReduction = 0.2
-  options.numRounds = 10
+  options.numRounds = 100
   options.regularization = 0.1
 
 if __name__ == '__main__':
