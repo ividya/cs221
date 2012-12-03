@@ -235,7 +235,7 @@ class StochasticGradientLearner():
     # Print out feature weights
     out = open('weights.txt', 'w+')
     for i in range(len(self.weights)):
-      print >>out, "label: " + str(i) + " weights: " +" ".join(str(w) for w in self.weights[i].values())
+      print >>out, "label: " + str(i+1) + " weights: " +" ".join(str(w) for w in self.weights[i].values())
     out.close()
 
 
@@ -275,7 +275,7 @@ def setTunedOptions(options):
   featureExtractor = basicFeatureExtractor
   options.initStepSize = 1
   options.stepSizeReduction = 0.2
-  options.numRounds = 100
+  options.numRounds = 500
   options.regularization = 0.1
 
 if __name__ == '__main__':

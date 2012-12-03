@@ -17,10 +17,12 @@ def getClassificationErrorRate(examples, predict, displayName=None, verbose=0, f
 
 def readExamples(path):
   examples = list()
-  for line in train_features: 
+  exampleFile = open(path)
+  for line in exampleFile: 
     inputs = [int(x) for x in line.split()]
     level = inputs.pop(0)
     examples.append((inputs, level))
+  exampleFile.close()
   return examples
 
 def runLearner(module, args):
@@ -53,7 +55,7 @@ def runLearner(module, args):
 
   # Read data
   trainExamples = readExamples('train_results.txt')
-  validationExamples = readExamples('test_results.txt')
+  validationExamples = readExamples('tests_results.txt')
 
   if options.setTunedOptions:
     print "Using tuned options"
