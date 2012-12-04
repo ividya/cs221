@@ -158,7 +158,8 @@ class StochasticGradientLearner():
   """
   def learn(self, trainExamples, validationExamples, loss, lossGradient, options):
     #We have 5 classes, so we need 5 weight vectors to update
-    self.weights = [util.Counter() for i in range(5)]
+    if not self.weights: 
+      self.weights = [util.Counter() for i in range(5)]
     random.seed(42)
     
     print getNumClassInSet(trainExamples)
@@ -265,6 +266,23 @@ class StochasticGradientLearner():
     m = max(predictors)
     return predictors.index(m) + 1
 
+  def predict_one(self, x):
+    weights_file = open("weights.txt")
+    self.weights = [util.Counter() for i in range(5)]
+    line_num = 0
+    feature_num = 0
+    for line in weights_file: 
+      values = line.split()
+      values.pop(0)
+      values.pop(0)
+      values.pop(0)
+      for weight in values: 
+        self.weights[line_num][feature_num] = float(weight)
+        feature_num += 1
+      line_num += 1
+      feature_num = 0 
+    return self.predict(x)
+  
 # After you have tuned your parameters, set the hyperparameter options:
 # featureExtractor, loss, initStepSize, stepSizeReduction, numRounds, regularization, etc.
 # The autograder will call this function before calling learn().

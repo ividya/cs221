@@ -37,6 +37,7 @@ import sudoku
 import random 
 import features
 import knn
+import learning
 
 class Generate:
   
@@ -63,7 +64,14 @@ class Generate:
     point['features'] = feature_vector
     point = knn.classify(point, "train_results.txt", 5)
     level = int(point['level'])
-    return level
+    sgl = learning.StochasticGradientLearner(learning.basicFeatureExtractor)
+    feature_vector.insert(0, level)
+    sgl_level = sgl.predict_one(feature_vector)
+    weighted_level = 2*level + 3*sgl_level
+    weighted_level = weighted_level/5
+    if level == 1 or sgl_level == 1: 
+      return 1
+    return weighted_level
   
   def createSudoku(self, level):
     extraGenerated = 0
@@ -90,18 +98,18 @@ class Generate:
           nonempties = su.getNonEmptySquares()
           choice = random.choice(nonempties)
           su.clearSquare(choice[0], choice[1])
-        
-        su.printPuzzle()
-        
+          
         su_level = self.classify(su)
         su.setClassification(su_level)
-        if level == su.getDifficulty() or "easy" in level: 
+        su.printPuzzle()
+        if level == su.getDifficulty() or (level == "very easy" and su.getDifficulty() == "easy"):
           foundPuzzle = True
         else: 
           extraGenerated += 1
           self.stored[su.getDifficulty()].append(su)
     else: 
       su = self.stored[level].pop()
+    print "Extra puzzles generated:", extraGenerated
     return su
   
   def basicCreate(self):

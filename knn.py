@@ -122,7 +122,7 @@ def run_all_test_points(test_features, train_features, k):
   print >>knn_output, "difference on average: ", diff
   print "difference on average: ", diff
 
-run_all_test_points("tests_results.txt", "train_results.txt", int(sys.argv[1]))
+#run_all_test_points("tests_results.txt", "train_results.txt", int(sys.argv[1]))
 '''
 data = dict()
 data['features'] = [1, 1]

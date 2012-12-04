@@ -37,7 +37,6 @@ class Sudoku:
       return 4
     if self.classification == "fiendish": 
       return 5
-    print "Some sort of error occurred!"
     return 0
   
   def hasEmptyDomain(self):
@@ -144,6 +143,8 @@ class Sudoku:
     result2 = ""
     rowCounter = 0
     colCounter = 0
+    print "Level: ", self.getDifficulty()
+    print >>output, "Level: ", self.getDifficulty()
     for row in self.puzzle:
       print "|---|---|---|---|---|---|---|---|---| "
       print >>output, "<tr>"
